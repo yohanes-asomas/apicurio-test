@@ -1,0 +1,539 @@
+---
+swagger: "2.0"
+info:
+  title: Fielder Dev API
+  version: 1.0.0
+  description: Fielder Development API
+host: fielder-api-gateway-2ds1uk8y.ew.gateway.dev
+schemes:
+- https
+produces:
+- application/json
+paths:
+  /worker:
+    get:
+      produces:
+      - application/json
+      tags:
+      - worker
+      responses:
+        "200":
+          description: Success
+      operationId: worker-ping
+      description: Ping
+      x-google-backend:
+        address: https://worker-dot-fielder-dev-285511.appspot.com/
+  /worker-availability:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      tags:
+      - worker
+      parameters:
+      - name: Authorization
+        description: Firebase Auth token
+        in: header
+        required: true
+        type: string
+        default: Bearer FIREBASE_TOKEN
+      - name: workerAvailability
+        description: |
+          worker_availability fields
+        schema:
+          $ref: '#/definitions/workerAvailability'
+        in: body
+        required: false
+      responses:
+        "201":
+          description: Success
+        "400":
+          description: Bad request
+      operationId: worker-create-availability
+      description: Create Worker Availability
+      x-google-backend:
+        address: https://worker-dot-fielder-dev-285511.appspot.com
+        path_translation: APPEND_PATH_TO_ADDRESS
+  /worker-availability/{workerAvailabilityId}:
+    delete:
+      produces:
+      - application/json
+      tags:
+      - worker
+      parameters:
+      - name: workerAvailabilityId
+        description: "`worker-availability` doc ID      \n"
+        in: path
+        required: true
+        type: string
+      - name: Authorization
+        description: Firebase Auth token
+        in: header
+        required: true
+        type: string
+        default: Bearer FIREBASE_TOKEN
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+      operationId: worker-delete-availability
+      description: Delete Worker Availability
+      x-google-backend:
+        address: https://worker-dot-fielder-dev-285511.appspot.com
+        path_translation: APPEND_PATH_TO_ADDRESS
+    patch:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      tags:
+      - worker
+      parameters:
+      - name: workerAvailabilityId
+        description: "`worker-availability` doc ID      \n"
+        in: path
+        required: true
+        type: string
+      - name: Authorization
+        description: Firebase Auth token
+        in: header
+        required: true
+        type: string
+        default: Bearer FIREBASE_TOKEN
+      - name: workerAvailability
+        description: |
+          worker_availability fields
+        schema:
+          $ref: '#/definitions/workerAvailability'
+        in: body
+        required: false
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+      operationId: worker-update-availability
+      description: Update Worker Availability
+      x-google-backend:
+        address: "https://worker-dot-fielder-dev-285511.appspot.com/worker-availability/{workerAvailabilityId}/"
+  /workers:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      tags:
+      - worker
+      parameters:
+      - name: worker
+        description: |
+          `workers` fields
+        schema:
+          $ref: '#/definitions/worker'
+        in: body
+        required: false
+      responses:
+        "201":
+          description: "Invitation found, worker created"
+          schema:
+            $ref: '#/definitions/worker'
+        "200":
+          description: Worker exists
+          schema:
+            $ref: '#/definitions/worker'
+        "404":
+          description: Invitation not found
+        "400":
+          description: Bad request
+      operationId: worker-create
+      description: Create Worker
+      x-google-backend:
+        address: https://worker-dot-fielder-dev-285511.appspot.com
+        path_translation: APPEND_PATH_TO_ADDRESS
+  /workers/{workerId}/update:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      tags:
+      - worker
+      parameters:
+      - name: workerId
+        description: "`workers` doc ID       \n"
+        in: path
+        required: true
+        type: string
+      - name: worker_details
+        description: |
+          `workers` fields
+        schema:
+          $ref: '#/definitions/worker_details'
+        in: body
+        required: false
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+      operationId: worker-update
+      description: Update Worker
+      x-google-backend:
+        address: https://worker-dot-fielder-dev-285511.appspot.com
+        path_translation: APPEND_PATH_TO_ADDRESS
+  /worker_assignments/{workerAssignmentId}/worker_logs/clock_in:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      tags:
+      - worker
+      parameters:
+      - name: workerAssignmentId
+        description: "`worker_assignments` doc ID       \n"
+        in: path
+        required: true
+        type: string
+      - name: Authorization
+        description: Firebase Auth token
+        in: header
+        required: true
+        type: string
+        default: Bearer FIREBASE_TOKEN
+      - name: clockIn
+        description: |
+          Location
+        schema:
+          $ref: '#/definitions/clockIn'
+        in: body
+        required: false
+      responses:
+        "201":
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_201'
+        "400":
+          description: Bad request
+      operationId: worker-clock-in
+      description: Clock In
+      x-google-backend:
+        address: https://worker-dot-fielder-dev-285511.appspot.com
+        path_translation: APPEND_PATH_TO_ADDRESS
+  /worker_assignments/{workerAssignmentId}/worker_logs/{workerLogId}/clock_out:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      tags:
+      - worker
+      parameters:
+      - name: workerAssignmentId
+        description: "`worker_assignments` doc ID       \n"
+        in: path
+        required: true
+        type: string
+      - name: workerLogId
+        description: "`worker_logs` doc ID       \n"
+        in: path
+        required: true
+        type: string
+      - name: Authorization
+        description: Firebase Auth token
+        in: header
+        required: true
+        type: string
+        default: Bearer FIREBASE_TOKEN
+      - name: clockIn
+        description: |
+          Location
+        schema:
+          $ref: '#/definitions/clockIn_1'
+        in: body
+        required: false
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        "400":
+          description: Bad request
+      operationId: worker-clock-out
+      description: Clock Out
+      x-google-backend:
+        address: https://worker-dot-fielder-dev-285511.appspot.com
+        path_translation: APPEND_PATH_TO_ADDRESS
+  /notification:
+    get:
+      produces:
+      - application/json
+      tags:
+      - notification
+      responses:
+        "200":
+          description: Success
+      operationId: notification-ping
+      description: Ping
+      x-google-backend:
+        address: https://notification-dot-fielder-dev-285511.appspot.com/
+  /id_token:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      tags:
+      - notification
+      parameters:
+      - name: Authorization
+        description: Firebase Auth token
+        in: header
+        required: true
+        type: string
+        default: Bearer FIREBASE_TOKEN
+      - name: idToken
+        description: |
+          Token details
+        schema:
+          $ref: '#/definitions/idToken'
+        in: body
+        required: false
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+      operationId: notification-id-token
+      description: Update FCM token
+      x-google-backend:
+        address: https://notification-dot-fielder-dev-285511.appspot.com
+        path_translation: APPEND_PATH_TO_ADDRESS
+  /employer:
+    get:
+      produces:
+      - application/json
+      tags:
+      - employer
+      responses:
+        "200":
+          description: Success
+      operationId: employer-ping
+      description: Ping
+      x-google-backend:
+        address: https://employer-dot-fielder-dev-285511.appspot.com/
+  /feedback:
+    get:
+      produces:
+      - application/json
+      tags:
+      - feedback
+      responses:
+        "200":
+          description: Success
+      operationId: feedback-ping
+      description: Ping
+      x-google-backend:
+        address: https://feedback-dot-fielder-dev-285511.appspot.com/
+  /feedbacks:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      tags:
+      - feedback
+      parameters:
+      - name: Authorization
+        description: Firebase Auth token
+        in: header
+        required: true
+        type: string
+        default: Bearer FIREBASE_TOKEN
+      - name: feedback
+        description: |
+          Feedback details
+        schema:
+          $ref: '#/definitions/feedback'
+        in: body
+        required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/feedbackCreated'
+        "400":
+          description: Bad request
+      operationId: feedback-create
+      description: Create Feedback
+      x-google-backend:
+        address: https://feedback-dot-fielder-dev-285511.appspot.com
+        path_translation: APPEND_PATH_TO_ADDRESS
+definitions:
+  workerAvailability:
+    type: object
+    properties:
+      status:
+        default: New
+        type: string
+      start_date:
+        default: 2020-10-28T00:00:00.000+0000
+        type: string
+      end_date:
+        default: 2020-11-28T00:00:00.000+0000
+        type: string
+      start_time:
+        default: 08:00
+        type: string
+      end_time:
+        default: "660"
+        type: string
+      recurrence:
+        $ref: '#/definitions/workerAvailability_recurrence'
+  worker_details:
+    type: object
+    properties:
+      first_name:
+        type: string
+      last_name:
+        type: string
+      is_completed:
+        default: false
+        type: boolean
+      phone:
+        default: "441122334455"
+        type: string
+      uid:
+        default: wPVzniDcYNX6XSKgZ8swVsvHXaS2
+        type: string
+      created_at:
+        default: 2020-09-26T14:31:23.163+0000
+        type: string
+      updated_at:
+        default: 2020-09-26T14:31:23.163+0000
+        type: string
+  worker:
+    type: object
+    properties:
+      phone_number:
+        default: 441122334455
+        type: string
+      worker_id:
+        default: wPVzniDcYNX6XSKgZ8swVsvHXaS2
+        type: string
+  clockIn:
+    type: object
+    properties:
+      lat:
+        type: number
+      lng:
+        type: number
+  inline_response_201:
+    type: object
+    properties:
+      id:
+        default: Wn1TVux3wsJxKlbwwkZg
+        type: string
+      clock_in_time:
+        default: 2020-09-26T14:31:23.163+0000
+        type: string
+      clock_out_time:
+        type: string
+      clock_in_location:
+        $ref: '#/definitions/clockIn'
+      clock_out_location:
+        type: object
+  clockIn_1:
+    type: object
+    properties:
+      lat:
+        type: number
+      lng:
+        type: number
+  inline_response_200:
+    type: object
+    properties:
+      id:
+        default: Wn1TVux3wsJxKlbwwkZg
+        type: string
+      clock_in_time:
+        default: 2020-09-26T14:31:23.163+0000
+        type: string
+      clock_out_time:
+        default: 2020-09-26T19:00:12.235+0000
+        type: string
+      clock_in_location:
+        $ref: '#/definitions/clockIn_1'
+      clock_out_location:
+        $ref: '#/definitions/clockIn_1'
+  idToken:
+    type: object
+    properties:
+      id_token:
+        default: xznf7832bcjewnvSHGFU373423ewgtw42
+        type: string
+      device_id:
+        default: iknasgn&T%382bfuyewHFaf8asgsdag
+        type: string
+  feedback:
+    type: object
+    properties:
+      screen:
+        default: Sign Up
+        type: string
+      rating:
+        type: integer
+  feedbackCreated:
+    type: object
+    properties:
+      worker_phone:
+        default: "441122334455"
+        type: string
+      screen:
+        default: Sign Up
+        type: string
+      rating:
+        type: integer
+      timestamp:
+        default: 2020-09-26T19:00:12.235+0000
+        type: string
+  workerAvailability_recurrence:
+    type: object
+    properties:
+      interval_amount:
+        type: integer
+      repeat_interval_type:
+        default: Weekly
+        type: string
+      monday:
+        default: true
+        type: boolean
+      tuesday:
+        default: false
+        type: boolean
+      wednesday:
+        default: false
+        type: boolean
+      thursday:
+        default: false
+        type: boolean
+      friday:
+        default: false
+        type: boolean
+      saturday:
+        default: false
+        type: boolean
+      sunday:
+        default: false
+        type: boolean
+tags:
+- name: worker
+  description: Worker service https://github.com/asomas/fielder-worker-service
+- name: notification
+  description: Notification service https://github.com/asomas/fielder-notification-service
+- name: employer
+  description: Employer service https://github.com/asomas/fielder-employer-service
+- name: feedback
+  description: Feedback service https://github.com/asomas/fielder-feedback-service
